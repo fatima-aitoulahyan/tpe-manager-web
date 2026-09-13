@@ -2,7 +2,7 @@
 
 A billing and invoicing platform for small Moroccan businesses (TPEs). Web application built with React, covering quotes, invoices, cash flow tracking, and credit requests.
 
-> This repository contains the web frontend. The backend (Django REST) and the mobile app (Flutter) are maintained in separate repositories.
+> This repository contains the web frontend. The [backend Django REST Framework](https://github.com/fatima-aitoulahyan/tpe-manager-backend) and the mobile app (Flutter) are maintained in separate repositories.
 
 ## Preview
 
