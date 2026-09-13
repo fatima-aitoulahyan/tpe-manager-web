@@ -1,16 +1,90 @@
-# React + Vite
+# TPE Manager — Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A billing and invoicing platform for small Moroccan businesses (TPEs). Web application built with React, covering quotes, invoices, cash flow tracking, and credit requests.
 
-Currently, two official plugins are available:
+> This repository contains the web frontend. The backend (Django REST) and the mobile app (Flutter) are maintained in separate repositories.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Preview
 
-## React Compiler
+### Dashboard
+![Dashboard](docs/screenshots/dashboard.png)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Quotes list
+![Quotes](docs/screenshots/devis-list.png)
 
-## Expanding the ESLint configuration
+### Creating a quote
+![Create quote](docs/screenshots/devis-create.png)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Invoicing
+![Invoices](docs/screenshots/factures.png)
+
+##  Features
+
+- **Authentication** — sign up, login, forgot password (email code), JWT with automatic token refresh
+- **Dashboard** — balance, statistics, charts (bar/pie)
+- **Quotes** — creation, full lifecycle tracking (draft → sent → accepted/rejected/expired), AI-assisted quote generation from a natural language description
+- **Invoicing** — invoice creation, payment tracking, statuses
+- **Cash flow** — transaction tracking, chart visualization
+- **Credit** — eligibility scoring, requests and supporting documents
+- **Clients** — client management
+- **Notifications** — tax declaration reminders (Jan 1, Apr 1, Jul 1, Oct 1), push notifications
+- **Profile** — per-user SMTP configuration, password change
+- **Internationalization** — French and Arabic UI
+
+##  Tech stack
+
+- **React** (Vite)
+- **Redux Toolkit** — global state management (auth, UI)
+- **Axios** — HTTP client with JWT interceptors
+- **React Hook Form** — form handling
+- **Tailwind CSS** — styling
+- Feature-based architecture (`features/`) with separated components and pages
+
+##  Project structure
+
+```
+src/
+├── core/                 # API config, hooks, constants
+├── store/                # Redux Toolkit (slices)
+├── features/             # Business modules (auth, dashboard, devis, factures, cashflow, credit, clients, notifications, profile)
+├── shared/                # Reusable UI components, layout, utils
+└── routes/                # Routing (React Router)
+```
+
+##  Getting started
+
+### Prerequisites
+- Node.js 18+
+- The TPE Manager backend must be running (see the backend repository)
+
+### Steps
+
+```bash
+git clone  https://github.com/fatima-aitoulahyan/tpe-manager-web.git
+cd tpe_web
+npm install
+```
+
+```
+VITE_API_URL=http://localhost:8000/api
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+The app will be available at `http://localhost:5173`.
+
+##  Available scripts
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Starts the development server |
+| `npm run build` | Production build |
+| `npm run preview` | Preview the production build |
+
+##  Security
+
+JWT tokens are stored client-side and refreshed automatically via an Axios interceptor. The `.env` file (containing the API URL) is not versioned — see `.env.example` for the required configuration.
