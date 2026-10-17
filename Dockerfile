@@ -1,19 +1,13 @@
-# Étape 1 : Utiliser une image Node stable et légère
-FROM node:20-alpine
-
+# --- Étape 1 : Build de l'application React ---
+FROM node:20-alpine AS builder
 WORKDIR /app
-
-# Copier uniquement les fichiers de dépendances pour optimiser le cache Docker
 COPY package*.json ./
-
-# Installer les dépendances
 RUN npm install
-
-# Copier le reste du code source
 COPY . .
+RUN npm run build
 
-# Exposer le port par défaut de Vite
-EXPOSE 5173
-
-# Lancer Vite en mode développement avec l'option --host pour être accessible depuis l'extérieur du conteneur
-CMD ["npm", "run", "dev", "--", "--host"]
+# --- Étape 2 : Serveur Nginx ---
+FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
