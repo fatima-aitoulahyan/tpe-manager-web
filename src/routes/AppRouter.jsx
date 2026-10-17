@@ -65,6 +65,10 @@ const AppRouter = () => {
                         <Route path="/admin/users" element={<AdminUsersListPage />} />
                         <Route path="/admin/users/:id" element={<AdminUserDetailPage />} />
 
+                        <Route path="/admin/notifications" element={<NotificationsPage />} />
+
+                        <Route path="/admin/profile" element={<ProfilePage />} />
+
                         <Route path="/admin/devis/:id" element={<DevisDetailPage />} />
                         <Route path="/admin/factures/:id" element={<FactureDetailPage />} />
                     </Route>

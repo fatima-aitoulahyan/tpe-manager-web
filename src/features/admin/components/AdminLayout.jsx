@@ -1,8 +1,9 @@
-import React from 'react';
-import { Outlet, NavLink } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../../store/slices/authSlice';
 import { LayoutGrid, Users, Bell, ChevronLeft, LogOut } from 'lucide-react';
+import { useNotifications } from '../../../core/hooks/useNotifications'; // Importez votre hook
 
 const navItems = [
     { to: '/admin', label: 'Tableau de bord', icon: LayoutGrid, end: true },
@@ -11,7 +12,26 @@ const navItems = [
 
 export default function AdminLayout() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { user } = useSelector((s) => s.auth);
+    const { fetchNotifications } = useNotifications();
+
+    const [unreadCount, setUnreadCount] = useState(0);
+
+    // Charger le nombre de notifications non lues pour afficher le badge rouge
+    useEffect(() => {
+        async function loadUnreadCount() {
+            try {
+                const data = await fetchNotifications();
+                const list = Array.isArray(data) ? data : (data.results || []);
+                const unread = list.filter(n => !n.lu).length;
+                setUnreadCount(unread);
+            } catch (error) {
+                console.error("Erreur chargement notifications", error);
+            }
+        }
+        loadUnreadCount();
+    }, [fetchNotifications]);
 
     return (
         <div className="min-h-screen w-full bg-slate-50 flex">
@@ -74,15 +94,29 @@ export default function AdminLayout() {
                         Espace Administrateur
                     </div>
                     <div className="flex items-center gap-4">
-                        <button className="relative text-slate-400 hover:text-slate-600">
+                        {/* Bouton cloche qui redirige vers la page des notifications */}
+                        <button
+                            onClick={() => navigate('/admin/notifications')}
+                            className="relative p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors"
+                            title="Voir les notifications"
+                        >
                             <Bell size={20} />
+                            {unreadCount > 0 && (
+                                <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                    {unreadCount}
+                </span>
+                            )}
                         </button>
-                        <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-semibold text-indigo-600">
+
+                        <button
+                            onClick={() => navigate('/admin/profile')}
+                            className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-semibold text-indigo-600 hover:bg-indigo-200 transition-colors cursor-pointer"
+                            title="Mon profil"
+                        >
                             {user?.nom?.[0]?.toUpperCase()}
-                        </div>
+                        </button>
                     </div>
-                </header>
-                <main className="flex-1 overflow-y-auto p-8">
+                </header>                <main className="flex-1 overflow-y-auto p-8">
                     <Outlet />
                 </main>
             </div>
